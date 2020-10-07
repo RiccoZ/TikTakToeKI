@@ -28,7 +28,7 @@ public class GameFrame extends JFrame {
                 int  x= e.getX();
                 int y = e.getY();
 
-                x = (x + 50) / 100;
+                x = (x + 50) / 100; //check in which square the click is
                 y /= 100;
 
                 g.click(x, y);
