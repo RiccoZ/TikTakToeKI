@@ -39,10 +39,9 @@ public class Game {
 
         for(int i : field[y]) {
             sum += i;
-            System.out.println(sum);
         }
 
-        if(sum == 3) {
+        if(Math.abs(sum) == 3) { //check if someone won
             System.out.println("win");
             turn = 0;
             return true;
@@ -52,10 +51,9 @@ public class Game {
 
         for(int i : field[x]) {
             sum += i;
-            System.out.println(sum);
         }
 
-        if(sum == 3) {
+        if(Math.abs(sum) == 3) { //check if someone won
             System.out.println("win");
             turn = 0;
             return true;
@@ -67,7 +65,7 @@ public class Game {
             sum = field[0][0] + field[1][1] + field[2][2];
         }
 
-        if(sum == 3) {
+        if(Math.abs(sum) == 3) { //check if someone won
             System.out.println("win");
             turn = 0;
             return true;
@@ -101,6 +99,8 @@ public class Game {
         return listofnums;
     }
 
+
+
     private void react() {
         System.out.println(getnums());
 
@@ -108,28 +108,91 @@ public class Game {
 
         int pos = 0;
 
-        if (nums.contains(-2)) {
-            for (int i = 0; i < nums.size(); i++) {
-                if (nums.get(i) == -2) {
-                    pos = i;
+        int search = 0;
+
+        if (nums.contains(-2)) { //check if pc can win
+            search = -2;
+        } else {
+            if(nums.contains(2)) { //check if enemy can win
+                search = 2;
+            } else {
+                if(nums.contains(-1)) { //check if can build opportunity to win
+                    search = -1;
                 }
+            }
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums.get(i) == search) {
+                pos = i;
+                break;
             }
         }
 
         int x = pos % 3;
+        int y = 0;
 
-        if ((pos / 3) == 1) {
-            for (int y = 0; y < 3; y++) {
+        int div = pos / 3;
+
+        if (div == 0) {
+            for (y = 0; y < 3; y++) {
                 if (field[x][y] == 0) {
-                    field[x][y] = -1; //add mark to array
-                    int xnew = (x+1) * 100; //middle of square
-                    int ynew = 50 + (y+1) * 100; //middle of square
-                    gf.addcircle(xnew, ynew);
-                    turn = 1;
-                    checkwin(x,y);
-                    return;
+                    break;
                 }
             }
+        } else {
+            if (div == 1) {
+                y = x;
+                for (x = 0; x < 3; x++) {
+                    if (field[x][y] == 0) {
+                        break;
+                    }
+                }
+            } else {
+                if(pos % 3 == 0) {
+                    if(field[0][0] == 0) {
+                        x = 0;
+                        y = 0;
+                    } else {
+                        if(field[1][1] == 0) {
+                            x = 1;
+                            y = 1;
+                        } else {
+                            if(field[2][2] == 0) {
+                                x = 2;
+                                y = 2;
+                            }
+                        }
+                    }
+                } else {
+                    if(field[0][2] == 0) {
+                        x = 0;
+                        y = 2;
+                    } else {
+                        if(field[1][1] == 0) {
+                            x = 1;
+                            y = 1;
+                        } else {
+                            if(field[2][0] == 0) {
+                                x = 2;
+                                y = 0;
+                            }
+                        }
+                    }
+                }
+
+
+            }
         }
+
+        System.out.println(x + "/" + y);
+
+        field[x][y] = -1; //add mark to array
+        int xnew = (x+1) * 100; //middle of square
+        int ynew = 50 + (y+1) * 100; //middle of square
+        gf.addcircle(xnew, ynew);
+        turn = 1;
+        checkwin(x,y);
+
     }
 }
